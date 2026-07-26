@@ -1,0 +1,1317 @@
+
+<!DOCTYPE html>
+<html lang="ru" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>lovenex | Fullstack Developer & OSINT Specialist</title>
+    <!-- Tailwind CSS CDN для базовой сетки и утилит -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome для иконок -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: JetBrains Mono для терминального стиля и Inter для интерфейса -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ==========================================================================
+           1. НАСТРОЙКА ЦВЕТОВЫХ ПЕРЕМЕННЫХ И ОСНОВНЫХ СТИЛЕЙ (CSS CUSTOM VARIABLES)
+           ========================================================================== */
+        :root {
+            --bg-dark-950: #040508;
+            --bg-dark-900: #080b11;
+            --bg-dark-800: #0f131a;
+            --bg-dark-700: #1a1f29;
+            --cyber-cyan: #00f2fe;
+            --cyber-purple: #9d4edd;
+            --cyber-green: #39ff14;
+            --cyber-pink: #ff007f;
+            --glass-bg: rgba(8, 11, 17, 0.65);
+            --glass-border: rgba(0, 242, 254, 0.15);
+            --text-gray: #94a3b8;
+            --text-light: #f8fafc;
+            --font-main: 'Inter', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Кастомный скроллбар */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-dark-950);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--bg-dark-700);
+            border-radius: 4px;
+            border: 2px solid var(--bg-dark-950);
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--cyber-cyan);
+            box-shadow: 0 0 10px var(--cyber-cyan);
+        }
+
+        /* Базовые стили страницы */
+        body {
+            background-color: var(--bg-dark-950);
+            color: var(--text-light);
+            font-family: var(--font-main);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Кастомный курсор */
+        .custom-cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--cyber-cyan);
+            border-radius: 50%;
+            position: fixed;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 9999;
+            transition: width 0.2s, height 0.2s, background-color 0.2s;
+            mix-blend-mode: difference;
+        }
+        .custom-cursor-dot {
+            width: 4px;
+            height: 4px;
+            background-color: var(--cyber-purple);
+            border-radius: 50%;
+            position: fixed;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* Эффект наведения на интерактивные элементы */
+        .interactive-hover:hover ~ .custom-cursor {
+            width: 40px;
+            height: 40px;
+            background-color: rgba(0, 242, 254, 0.1);
+            border-color: var(--cyber-purple);
+        }
+
+        /* ==========================================================================
+           2. СТИЛИ ГЛАССМОРФИЗМА И НЕОНОВЫХ СВЕЧЕНИЙ (GLASSMORPHISM & NEON GLOWS)
+           ========================================================================== */
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            transition: var(--transition-smooth);
+        }
+
+        .glass-panel:hover {
+            border-color: rgba(157, 78, 221, 0.4);
+            box-shadow: 0 10px 30px -10px rgba(0, 242, 254, 0.15);
+        }
+
+        /* Неоновые тексты и границы */
+        .neon-text-cyan {
+            text-shadow: 0 0 10px rgba(0, 242, 254, 0.6), 0 0 20px rgba(0, 242, 254, 0.2);
+        }
+        .neon-text-purple {
+            text-shadow: 0 0 10px rgba(157, 78, 221, 0.6), 0 0 20px rgba(157, 78, 221, 0.2);
+        }
+        .neon-text-green {
+            text-shadow: 0 0 10px rgba(57, 255, 20, 0.6), 0 0 20px rgba(57, 255, 20, 0.2);
+        }
+
+        .neon-border-cyan {
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.25), inset 0 0 15px rgba(0, 242, 254, 0.1);
+            border-color: var(--cyber-cyan);
+        }
+
+        /* Анимированные фоновые свечения (Cyber Orbs) */
+        .cyber-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            z-index: 1;
+            opacity: 0.15;
+            pointer-events: none;
+            animation: orbFloat 12s infinite alternate ease-in-out;
+        }
+        .orb-1 {
+            width: 450px;
+            height: 450px;
+            background: radial-gradient(circle, var(--cyber-cyan) 0%, transparent 70%);
+            top: 10%;
+            left: -10%;
+        }
+        .orb-2 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, var(--cyber-purple) 0%, transparent 70%);
+            bottom: 20%;
+            right: -10%;
+            animation-delay: -4s;
+        }
+        .orb-3 {
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, var(--cyber-pink) 0%, transparent 70%);
+            top: 50%;
+            left: 30%;
+            animation-delay: -8s;
+        }
+
+        @keyframes orbFloat {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(50px, 40px) scale(1.15); }
+        }
+
+        /* ==========================================================================
+           3. СПЕЦИАЛЬНЫЕ ЭФФЕКТЫ, ГЛИЧИ И АНИМАЦИИ (GLITCH & CYBER ANIMATIONS)
+           ========================================================================== */
+        .glitch-text {
+            position: relative;
+            color: var(--text-light);
+        }
+        .glitch-text::before, .glitch-text::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-dark-950);
+        }
+        .glitch-text::before {
+            left: 2px;
+            text-shadow: -1px 0 var(--cyber-pink);
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim 5s infinite linear alternate-reverse;
+        }
+        .glitch-text::after {
+            left: -2px;
+            text-shadow: -1px 0 var(--cyber-cyan);
+            clip: rect(85px, 450px, 140px, 0);
+            animation: glitch-anim2 5s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitch-anim {
+            0% { clip: rect(15px, 9999px, 66px, 0); }
+            10% { clip: rect(34px, 9999px, 55px, 0); }
+            20% { clip: rect(81px, 9999px, 19px, 0); }
+            30% { clip: rect(45px, 9999px, 90px, 0); }
+            40% { clip: rect(12px, 9999px, 43px, 0); }
+            50% { clip: rect(98px, 9999px, 12px, 0); }
+            60% { clip: rect(72px, 9999px, 56px, 0); }
+            70% { clip: rect(33px, 9999px, 81px, 0); }
+            80% { clip: rect(19px, 9999px, 49px, 0); }
+            90% { clip: rect(88px, 9999px, 100px, 0); }
+            100% { clip: rect(5px, 9999px, 30px, 0); }
+        }
+        @keyframes glitch-anim2 {
+            0% { clip: rect(76px, 9999px, 116px, 0); }
+            11% { clip: rect(4px, 9999px, 44px, 0); }
+            22% { clip: rect(90px, 9999px, 33px, 0); }
+            33% { clip: rect(25px, 9999px, 85px, 0); }
+            44% { clip: rect(66px, 9999px, 12px, 0); }
+            55% { clip: rect(100px, 9999px, 70px, 0); }
+            66% { clip: rect(45px, 9999px, 98px, 0); }
+            77% { clip: rect(12px, 9999px, 66px, 0); }
+            88% { clip: rect(54px, 9999px, 2px, 0); }
+            100% { clip: rect(33px, 9999px, 120px, 0); }
+        }
+
+        /* Анимированная сетка на фоне */
+        .cyber-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: 50px 50px;
+            background-image: 
+                linear-gradient(to right, rgba(0, 242, 254, 0.02) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0, 242, 254, 0.02) 1px, transparent 1px);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Стилизация терминала в Hero */
+        .terminal-header {
+            background: rgba(15, 19, 26, 0.9);
+            border-bottom: 1px solid var(--glass-border);
+        }
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        /* Анимация мигания каретки */
+        .terminal-caret {
+            display: inline-block;
+            width: 8px;
+            height: 15px;
+            background-color: var(--cyber-cyan);
+            animation: caretBlink 1s infinite;
+            vertical-align: middle;
+            margin-left: 4px;
+        }
+        @keyframes caretBlink {
+            0%, 49% { opacity: 1; }
+            50%, 100% { opacity: 0; }
+        }
+
+        /* Таймлайн стили */
+        .timeline-container {
+            position: relative;
+        }
+        .timeline-container::after {
+            content: '';
+            position: absolute;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--cyber-cyan), var(--cyber-purple), transparent);
+            top: 0;
+            bottom: 0;
+            left: 20px;
+        }
+        @media(min-width: 768px) {
+            .timeline-container::after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+        }
+
+        /* Свечение для прогресс баров */
+        .skill-bar-fill {
+            position: relative;
+            overflow: hidden;
+        }
+        .skill-bar-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: barShine 2s infinite;
+        }
+        @keyframes barShine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* Эффект сканирования OSINT */
+        .scan-line {
+            position: absolute;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(to bottom, transparent, var(--cyber-green), transparent);
+            box-shadow: 0 0 15px var(--cyber-green);
+            top: 0;
+            animation: scanAnim 4s infinite linear;
+            pointer-events: none;
+            z-index: 10;
+        }
+        @keyframes scanAnim {
+            0% { top: 0%; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+
+        /* Активный пункт меню при скролле */
+        .nav-link.active {
+            color: var(--cyber-cyan);
+            text-shadow: 0 0 8px rgba(0, 242, 254, 0.5);
+            border-bottom: 2px solid var(--cyber-cyan);
+        }
+    </style>
+</head>
+<body class="selection:bg-cyan-500/30 selection:text-cyan-200">
+
+    <!-- Кастомные элементы курсора -->
+    <div class="custom-cursor hidden lg:block" id="customCursor"></div>
+    <div class="custom-cursor-dot hidden lg:block" id="customCursorDot"></div>
+
+    <!-- Фон: Сетка, Канвас с частицами и Орбы -->
+    <div class="fixed inset-0 w-full h-full pointer-events-none z-[2]">
+        <div class="cyber-grid"></div>
+        <canvas id="particleCanvas" class="absolute inset-0 w-full h-full opacity-60"></canvas>
+        <div class="cyber-orb orb-1"></div>
+        <div class="cyber-orb orb-2"></div>
+        <div class="cyber-orb orb-3"></div>
+    </div>
+
+    <!-- ==========================================================================
+       4. ШАПКА САЙТА (HEADER / NAVIGATION)
+       ========================================================================== */ -->
+    <header class="fixed top-0 left-0 w-full z-50 transition-all duration-300 glass-panel !rounded-none border-t-0 border-x-0 bg-dark-950/80 backdrop-blur-md" id="mainHeader">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <!-- Логотип -->
+            <a href="#hero" class="interactive-hover flex items-center gap-3">
+                <span class="font-mono text-xl font-bold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500 hover:scale-105 transition-transform">
+                    &lt;lovenex /&gt;
+                </span>
+                <span class="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                    ONLINE & WATCHING
+                </span>
+            </a>
+
+            <!-- Навигация (Десктоп) -->
+            <nav class="hidden md:flex items-center gap-8 font-mono text-sm">
+                <a href="#hero" class="nav-link text-slate-400 hover:text-white transition-colors py-2 active border-b-2 border-transparent">~/home</a>
+                <a href="#about" class="nav-link text-slate-400 hover:text-white transition-colors py-2 border-b-2 border-transparent">~/path</a>
+                <a href="#skills" class="nav-link text-slate-400 hover:text-white transition-colors py-2 border-b-2 border-transparent">~/specs</a>
+                <a href="#projects" class="nav-link text-slate-400 hover:text-white transition-colors py-2 border-b-2 border-transparent">~/projects</a>
+                <a href="#contact" class="nav-link text-slate-400 hover:text-white transition-colors py-2 border-b-2 border-transparent">~/contact</a>
+            </nav>
+
+            <!-- Кнопка Действия (Связаться) -->
+            <div class="hidden md:flex items-center gap-4">
+                <a href="https://t.me/lovenexu" target="_blank" class="interactive-hover font-mono text-xs px-5 py-2.5 rounded-lg border border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/10 hover:border-cyan-400 hover:shadow-[0_0_15px_rgba(0,242,254,0.3)] transition-all duration-300">
+                    <i class="fa-brands fa-telegram mr-2"></i>DM @lovenexu
+                </a>
+            </div>
+
+            <!-- Бургер-меню (Мобильное) -->
+            <button class="md:hidden text-white hover:text-cyan-400 transition-colors focus:outline-none" id="mobileMenuBtn">
+                <i class="fa-solid fa-bars text-2xl"></i>
+            </button>
+        </div>
+
+        <!-- Мобильное Меню Выдвижное -->
+        <div class="hidden md:hidden absolute top-20 left-0 w-full bg-slate-950/95 border-b border-cyan-500/20 backdrop-blur-lg flex-col px-6 py-8 gap-6 text-center font-mono" id="mobileMenu">
+            <a href="#hero" class="mobile-nav-link text-slate-300 hover:text-cyan-400 text-lg py-1 transition-colors">~/home</a>
+            <a href="#about" class="mobile-nav-link text-slate-300 hover:text-cyan-400 text-lg py-1 transition-colors">~/path</a>
+            <a href="#skills" class="mobile-nav-link text-slate-300 hover:text-cyan-400 text-lg py-1 transition-colors">~/specs</a>
+            <a href="#projects" class="mobile-nav-link text-slate-300 hover:text-cyan-400 text-lg py-1 transition-colors">~/projects</a>
+            <a href="#contact" class="mobile-nav-link text-slate-300 hover:text-cyan-400 text-lg py-1 transition-colors">~/contact</a>
+            <div class="h-px bg-slate-800 my-2"></div>
+            <a href="https://t.me/lovenexu" target="_blank" class="px-6 py-3 rounded-lg bg-gradient-to-r from-cyan-500 to-purple-600 text-white font-semibold flex items-center justify-center gap-2">
+                <i class="fa-brands fa-telegram"></i> Написать в Telegram
+            </a>
+        </div>
+    </header>
+
+    <main class="relative z-10">
+        <!-- ==========================================================================
+           5. ГЛАВНЫЙ ЭКРАН (HERO SECTION)
+           ========================================================================== */ -->
+        <section id="hero" class="min-h-screen flex items-center justify-center pt-24 pb-12 px-6 overflow-hidden">
+            <div class="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                <!-- Контентная Левая Часть -->
+                <div class="lg:col-span-7 flex flex-col gap-6 text-left">
+                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg glass-panel max-w-max border-cyan-500/20 bg-cyan-950/20 text-cyan-400 font-mono text-sm">
+                        <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                        Python Developer & OSINT Researcher
+                    </div>
+                    
+                    <h1 class="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-none text-white">
+                        Привет, я <br>
+                        <span class="glitch-text text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-400 to-purple-500" data-text="lovenex">lovenex</span>
+                    </h1>
+
+                    <h2 class="text-xl sm:text-2xl text-slate-300 font-mono flex items-center gap-2 h-10">
+                        <span>&gt;</span>
+                        <span id="typedElement" class="text-cyan-400"></span>
+                        <span class="terminal-caret"></span>
+                    </h2>
+
+                    <p class="text-slate-400 text-base sm:text-lg max-w-xl leading-relaxed">
+                        Специализируюсь на написании высоконагруженных Telegram-ботов, создании сетевых утилит, комплексной веб-разработке и глубоких OSINT-исследованиях. С 2021 года собираю цифровые следы и строю надежные VPN-архитектуры.
+                    </p>
+
+                    <!-- Блок с быстрыми ссылками и кнопками -->
+                    <div class="flex flex-col sm:flex-row gap-4 mt-4">
+                        <a href="#projects" class="interactive-hover px-8 py-4 rounded-xl font-bold bg-gradient-to-r from-cyan-500 to-purple-600 text-white shadow-lg hover:shadow-cyan-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3">
+                            <i class="fa-solid fa-code-branch"></i> Исследовать проекты
+                        </a>
+                        <a href="#contact" class="interactive-hover px-8 py-4 rounded-xl font-bold glass-panel border-cyan-500/20 text-cyan-400 hover:bg-cyan-500/10 hover:border-cyan-400 flex items-center justify-center gap-3">
+                            <i class="fa-solid fa-paper-plane"></i> Связаться со мной
+                        </a>
+                    </div>
+
+                    <!-- Быстрые Ссылки на Ресурсы -->
+                    <div class="flex items-center gap-6 mt-6 font-mono text-sm text-slate-400">
+                        <a href="https://t.me/adaptlovenex" target="_blank" class="interactive-hover flex items-center gap-2 hover:text-cyan-400 transition-colors group">
+                            <i class="fa-brands fa-telegram text-lg text-cyan-500 group-hover:scale-110 transition-transform"></i>
+                            <span>Адаптер Канал</span>
+                        </a>
+                        <div class="w-1 h-1 rounded-full bg-slate-700"></div>
+                        <a href="https://t.me/lovenexu" target="_blank" class="interactive-hover flex items-center gap-2 hover:text-purple-400 transition-colors group">
+                            <i class="fa-solid fa-paper-plane text-lg text-purple-500 group-hover:scale-110 transition-transform"></i>
+                            <span>Связь в TG</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Высокотехнологичная Правая Часть (Анимированный Терминал) -->
+                <div class="lg:col-span-5 relative w-full aspect-square max-w-[480px] mx-auto lg:mx-0">
+                    <div class="absolute inset-0 bg-gradient-to-r from-cyan-500 to-purple-500 rounded-2xl blur-xl opacity-25 animate-pulse"></div>
+                    <div class="relative w-full h-full glass-panel border-cyan-500/30 rounded-2xl overflow-hidden flex flex-col font-mono text-xs sm:text-sm">
+                        <!-- Заголовок Терминала -->
+                        <div class="terminal-header p-4 flex items-center justify-between">
+                            <div class="flex gap-2">
+                                <span class="terminal-dot bg-rose-500"></span>
+                                <span class="terminal-dot bg-amber-500"></span>
+                                <span class="terminal-dot bg-emerald-500"></span>
+                            </div>
+                            <span class="text-slate-500 text-[11px] font-mono">system_info.py — lovenex@machine</span>
+                        </div>
+                        <!-- Контент Терминала -->
+                        <div class="p-6 flex-1 flex flex-col gap-3 text-slate-300 overflow-y-auto">
+                            <div class="flex items-center gap-2">
+                                <span class="text-emerald-400">~ $</span>
+                                <span>python3 -m sys_info</span>
+                            </div>
+                            <div class="text-slate-500 font-normal leading-relaxed">
+                                <span class="text-purple-400">Initializing OSINT diagnostics...</span><br>
+                                [✓] Modules loaded successfully.<br>
+                                [✓] Cyber-security protocols initialized.
+                            </div>
+                            <div class="grid grid-cols-2 gap-y-2.5 gap-x-4 border-t border-slate-800/60 pt-4 mt-2">
+                                <div><span class="text-cyan-400">DEVELOPER:</span> lovenex</div>
+                                <div><span class="text-cyan-400">OSINT EXP:</span> 5+ Years</div>
+                                <div><span class="text-cyan-400">STABILITY:</span> 99.98%</div>
+                                <div><span class="text-cyan-400">TELEGRAM:</span> @lovenexu</div>
+                                <div><span class="text-cyan-400">MAIN LANG:</span> Python, JS</div>
+                                <div><span class="text-cyan-400">LOCATION:</span> Cyberspace</div>
+                            </div>
+                            <div class="border-t border-slate-800/60 pt-4 mt-2 text-slate-400">
+                                <p class="text-emerald-400/90">&gt; VPN NODES STATE: Active</p>
+                                <p class="text-amber-400/90">&gt; BOT ACTIVE THREADS: 124/150</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================================================
+           6. БЛОК "О СЕБЕ / ТАЙМЛАЙН ПУТИ" (ABOUT & TIMELINE)
+           ========================================================================== */ -->
+        <section id="about" class="py-24 px-6 relative">
+            <div class="max-w-7xl mx-auto">
+                <!-- Секционный заголовок -->
+                <div class="text-center flex flex-col items-center gap-4 mb-16">
+                    <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-white uppercase font-mono">
+                        <span class="text-cyan-400">~/</span>Хронология пути OSINT & Web
+                    </h2>
+                    <p class="text-slate-400 max-w-2xl text-center">
+                        Моя эволюция в IT: от первых строчек кода до разработки сложных масштабируемых систем парсинга, поиска уязвимостей и VPN-протоколов нового поколения.
+                    </p>
+                    <div class="w-24 h-1 bg-gradient-to-r from-cyan-400 to-purple-500 rounded-full mt-2"></div>
+                </div>
+
+                <!-- Таймлайн Интерактивный -->
+                <div class="timeline-container mt-12">
+                    <!-- Шаг 1: 2021 год -->
+                    <div class="relative flex flex-col md:flex-row items-start md:items-center justify-between mb-16 group">
+                        <div class="w-full md:w-[45%] md:text-right pr-0 md:pr-12 pl-12 md:pl-0 order-2 md:order-1">
+                            <span class="inline-block text-xs font-mono px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 mb-2">Старт Эры</span>
+                            <h3 class="text-xl font-bold text-white group-hover:text-cyan-400 transition-colors">Погружение в программирование и OSINT</h3>
+                            <p class="text-slate-400 mt-2 text-sm leading-relaxed">
+                                Начало изучения Python. Разработка первых скриптов автоматизации, сборщиков открытых данных и простых Telegram-ботов. Первые шаги в сфере OSINT, анализ методологий поиска связей по открытым источникам.
+                            </p>
+                        </div>
+                        <div class="absolute left-[10px] md:left-1/2 md:-translate-x-1/2 w-6 h-6 rounded-full bg-slate-950 border-4 border-cyan-400 z-10 group-hover:scale-125 transition-transform order-1"></div>
+                        <div class="w-full md:w-[45%] pl-12 md:pl-12 order-3">
+                            <div class="text-5xl font-mono font-extrabold text-slate-800 group-hover:text-cyan-500/10 transition-colors">2021</div>
+                        </div>
+                    </div>
+
+                    <!-- Шаг 2: 2022 год -->
+                    <div class="relative flex flex-col md:flex-row items-start md:items-center justify-between mb-16 group">
+                        <div class="w-full md:w-[45%] pr-0 md:pr-12 pl-12 md:pl-0 order-2 md:order-1 md:text-left">
+                            <div class="text-5xl font-mono font-extrabold text-slate-800 group-hover:text-purple-500/10 transition-colors text-right hidden md:block">2022</div>
+                        </div>
+                        <div class="absolute left-[10px] md:left-1/2 md:-translate-x-1/2 w-6 h-6 rounded-full bg-slate-950 border-4 border-purple-500 z-10 group-hover:scale-125 transition-transform order-1"></div>
+                        <div class="w-full md:w-[45%] pl-12 md:pl-12 order-3">
+                            <span class="inline-block text-xs font-mono px-3 py-1 rounded-full bg-purple-500/10 text-purple-400 mb-2">Наращивание стека</span>
+                            <h3 class="text-xl font-bold text-white group-hover:text-purple-400 transition-colors">Сетевые инструменты и автоматизация</h3>
+                            <p class="text-slate-400 mt-2 text-sm leading-relaxed">
+                                Разработка бомберов, спамеров, утилит для проведения аудита сетевой безопасности и автоматизации монотонных задач. Изучение асинхронного Python (asyncio, aiohttp, aiogram), углубление в реляционные БД и NoSQL.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Шаг 3: 2023 год -->
+                    <div class="relative flex flex-col md:flex-row items-start md:items-center justify-between mb-16 group">
+                        <div class="w-full md:w-[45%] md:text-right pr-0 md:pr-12 pl-12 md:pl-0 order-2 md:order-1">
+                            <span class="inline-block text-xs font-mono px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 mb-2">Продуктовая фаза</span>
+                            <h3 class="text-xl font-bold text-white group-hover:text-emerald-400 transition-colors">Масштабный OSINT-инструмент</h3>
+                            <p class="text-slate-400 mt-2 text-sm leading-relaxed">
+                                Запуск собственного OSINT-бота <span class="text-emerald-400 font-mono font-bold">@lovenexBot</span>. Реализация парсеров баз данных, алгоритмов сопоставления личностей, мониторинга утечек. Налаживание инфраструктуры для обработки гигабайт сырых данных в реальном времени.
+                            </p>
+                        </div>
+                        <div class="absolute left-[10px] md:left-1/2 md:-translate-x-1/2 w-6 h-6 rounded-full bg-slate-950 border-4 border-emerald-400 z-10 group-hover:scale-125 transition-transform order-1"></div>
+                        <div class="w-full md:w-[45%] pl-12 md:pl-12 order-3">
+                            <div class="text-5xl font-mono font-extrabold text-slate-800 group-hover:text-emerald-500/10 transition-colors">2023</div>
+                        </div>
+                    </div>
+
+                    <!-- Шаг 4: Настоящее время -->
+                    <div class="relative flex flex-col md:flex-row items-start md:items-center justify-between group">
+                        <div class="w-full md:w-[45%] pr-0 md:pr-12 pl-12 md:pl-0 order-2 md:order-1 md:text-left">
+                            <div class="text-5xl font-mono font-extrabold text-slate-800 group-hover:text-cyan-500/10 transition-colors text-right hidden md:block">CURRENT</div>
+                        </div>
+                        <div class="absolute left-[10px] md:left-1/2 md:-translate-x-1/2 w-6 h-6 rounded-full bg-slate-950 border-4 border-cyan-400 z-10 group-hover:scale-125 transition-transform order-1"></div>
+                        <div class="w-full md:w-[45%] pl-12 md:pl-12 order-3">
+                            <span class="inline-block text-xs font-mono px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 mb-2">Фокус на приватность</span>
+                            <h3 class="text-xl font-bold text-white group-hover:text-cyan-400 transition-colors">VPN Архитектура и Безопасность</h3>
+                            <p class="text-slate-400 mt-2 text-sm leading-relaxed">
+                                Создание приватного VPN проекта <span class="text-cyan-400 font-mono font-bold">@Nfnixbot</span> на базе протоколов Vless/Xray. Проектирование распределенной серверной инфраструктуры. Ведение личного экспертного блога и коммерческая разработка на заказ.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================================================
+           7. СЕКЦИЯ НАВЫКОВ (SKILLS / TECH STACK)
+           ========================================================================== */ -->
+        <section id="skills" class="py-24 px-6 relative bg-gradient-to-b from-transparent to-slate-950/60">
+            <div class="max-w-7xl mx-auto">
+                <!-- Заголовок -->
+                <div class="text-center flex flex-col items-center gap-4 mb-16">
+                    <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-white uppercase font-mono">
+                        <span class="text-cyan-400">~/</span>Технические навыки и компетенции
+                    </h2>
+                    <p class="text-slate-400 max-w-2xl text-center">
+                        Арсенал инструментов и технологий, применяемых в разработке защищенных систем и сборе разведданных.
+                    </p>
+                    <div class="w-24 h-1 bg-gradient-to-r from-cyan-400 to-purple-500 rounded-full mt-2"></div>
+                </div>
+
+                <!-- Сетка Навыков -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Навык 1: Python -->
+                    <div class="glass-panel p-6 flex flex-col justify-between hover:scale-[1.02]">
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-2xl">
+                                    <i class="fa-brands fa-python"></i>
+                                </div>
+                                <span class="font-mono text-cyan-400 font-bold text-sm">95%</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-white mb-2">Python Core & Async</h3>
+                            <p class="text-slate-400 text-sm leading-relaxed">
+                                Асинхронная архитектура, aiogram, FastAPI, asyncio, Pyrogram. Написание оптимизированных многопоточных и асинхронных скриптов, работа с парсерами и краулерами любой сложности.
+                            </p>
+                        </div>
+                        <div class="w-full bg-slate-800/50 h-2 rounded-full overflow-hidden mt-6">
+                            <div class="skill-bar-fill bg-gradient-to-r from-cyan-500 to-blue-500 h-full rounded-full" style="width: 95%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Навык 2: OSINT -->
+                    <div class="glass-panel p-6 flex flex-col justify-between hover:scale-[1.02]">
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400 text-2xl">
+                                    <i class="fa-solid fa-magnifying-glass-shield"></i>
+                                </div>
+                                <span class="font-mono text-purple-400 font-bold text-sm">90%</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-white mb-2">OSINT & Data Mining</h3>
+                            <p class="text-slate-400 text-sm leading-relaxed">
+                                Сбор и структурирование данных из публичных и приватных источников. Интеграция API реестров, поиск связей по номерам телефонов, никнеймам, почтам, соцсетям. Парсинг утекших баз.
+                            </p>
+                        </div>
+                        <div class="w-full bg-slate-800/50 h-2 rounded-full overflow-hidden mt-6">
+                            <div class="skill-bar-fill bg-gradient-to-r from-purple-500 to-pink-500 h-full rounded-full" style="width: 90%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Навык 3: Web-Development -->
+                    <div class="glass-panel p-6 flex flex-col justify-between hover:scale-[1.02]">
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 text-2xl">
+                                    <i class="fa-solid fa-code"></i>
+                                </div>
+                                <span class="font-mono text-emerald-400 font-bold text-sm">85%</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-white mb-2">Web-Development (HTML, JS, CSS)</h3>
+                            <p class="text-slate-400 text-sm leading-relaxed">
+                                Проектирование современных интерфейсов, веб-панелей для администрирования ботов. Работа с Vanilla JS (ES6+), CSS-фреймворками (Tailwind CSS) и интеграция фронтенда с бэкенд REST API.
+                            </p>
+                        </div>
+                        <div class="w-full bg-slate-800/50 h-2 rounded-full overflow-hidden mt-6">
+                            <div class="skill-bar-fill bg-gradient-to-r from-emerald-500 to-teal-500 h-full rounded-full" style="width: 85%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Навык 4: Системное администрирование -->
+                    <div class="glass-panel p-6 flex flex-col justify-between hover:scale-[1.02]">
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="w-12 h-12 rounded-xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-center text-rose-400 text-2xl">
+                                    <i class="fa-solid fa-server"></i>
+                                </div>
+                                <span class="font-mono text-rose-400 font-bold text-sm">88%</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-white mb-2">DevOps & Linux Administration</h3>
+                            <p class="text-slate-400 text-sm leading-relaxed">
+                                Настройка выделенных серверов (Ubuntu/Debian), контейнеризация приложений через Docker/Docker-compose, конфигурация Nginx, защита серверов от DDoS-атак и сканирования портов.
+                            </p>
+                        </div>
+                        <div class="w-full bg-slate-800/50 h-2 rounded-full overflow-hidden mt-6">
+                            <div class="skill-bar-fill bg-gradient-to-r from-rose-500 to-orange-500 h-full rounded-full" style="width: 88%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Навык 5: Базы Данных -->
+                    <div class="glass-panel p-6 flex flex-col justify-between hover:scale-[1.02]">
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 text-2xl">
+                                    <i class="fa-solid fa-database"></i>
+                                </div>
+                                <span class="font-mono text-amber-400 font-bold text-sm">90%</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-white mb-2">Databases (SQL & NoSQL)</h3>
+                            <p class="text-slate-400 text-sm leading-relaxed">
+                                Архитектура высокооптимизированных запросов. Практика работы с PostgreSQL, SQLite, MySQL и сверхбыстрыми NoSQL-хранилищами (Redis, MongoDB) для кэширования сессий ботов.
+                            </p>
+                        </div>
+                        <div class="w-full bg-slate-800/50 h-2 rounded-full overflow-hidden mt-6">
+                            <div class="skill-bar-fill bg-gradient-to-r from-amber-500 to-yellow-500 h-full rounded-full" style="width: 90%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Навык 6: VPN & Протоколы шифрования -->
+                    <div class="glass-panel p-6 flex flex-col justify-between hover:scale-[1.02]">
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="w-12 h-12 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400 text-2xl">
+                                    <i class="fa-solid fa-shield-halved"></i>
+                                </div>
+                                <span class="font-mono text-blue-400 font-bold text-sm">92%</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-white mb-2">Network Security & VPNs</h3>
+                            <p class="text-slate-400 text-sm leading-relaxed">
+                                Развертывание обфусцированных VPN-туннелей: Shadowsocks, VLESS, VMess, Trojan, Xray, XTLS. Защита трафика от провайдерской блокировки и DPI (Deep Packet Inspection).
+                            </p>
+                        </div>
+                        <div class="w-full bg-slate-800/50 h-2 rounded-full overflow-hidden mt-6">
+                            <div class="skill-bar-fill bg-gradient-to-r from-blue-500 to-cyan-400 h-full rounded-full" style="width: 92%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================================================
+           8. КАРТОЧКИ ПРОЕКТОВ (PORTFOLIO SHOWCASE)
+           ========================================================================== */ -->
+        <section id="projects" class="py-24 px-6 relative">
+            <div class="max-w-7xl mx-auto">
+                <!-- Заголовок -->
+                <div class="text-center flex flex-col items-center gap-4 mb-16">
+                    <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-white uppercase font-mono">
+                        <span class="text-cyan-400">~/</span>Витрина Проектов & Решений
+                    </h2>
+                    <p class="text-slate-400 max-w-2xl text-center">
+                        Каждый проект разработан мной "под ключ" — от архитектуры баз данных до развертывания на боевых серверах с высоким аптаймом.
+                    </p>
+                    <div class="w-24 h-1 bg-gradient-to-r from-cyan-400 to-purple-500 rounded-full mt-2"></div>
+                </div>
+
+                <!-- Главные Проекты в Сетке -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    
+                    <!-- Проект 1: VPN Project - @Nfnixbot -->
+                    <div class="glass-panel overflow-hidden border-cyan-500/20 hover:border-cyan-500/40 hover:shadow-[0_0_30px_rgba(0,242,254,0.15)] transition-all flex flex-col justify-between group rounded-2xl">
+                        <!-- Шапка проекта с картинкой-паттерном -->
+                        <div class="relative h-48 bg-slate-900 border-b border-slate-800/60 overflow-hidden flex items-center justify-center">
+                            <!-- Сетевой декор -->
+                            <div class="absolute inset-0 bg-cover bg-center opacity-30 pointer-events-none" style="background-image: radial-gradient(circle, var(--cyber-cyan) 1px, transparent 1px); background-size: 20px 20px;"></div>
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent"></div>
+                            <div class="relative z-10 text-center flex flex-col items-center">
+                                <i class="fa-solid fa-vault text-5xl text-cyan-400 mb-2 group-hover:scale-110 transition-transform duration-300"></i>
+                                <span class="font-mono text-cyan-400 font-bold tracking-widest text-lg">@Nfnixbot VPN</span>
+                            </div>
+                            <span class="absolute top-4 right-4 text-[10px] font-mono font-semibold px-2.5 py-1 rounded bg-slate-850 border border-slate-700 text-slate-400">PERSONAL PROJECT</span>
+                        </div>
+                        
+                        <!-- Описание проекта -->
+                        <div class="p-8 flex-1 flex flex-col justify-between gap-6">
+                            <div class="flex flex-col gap-3">
+                                <div class="flex items-center justify-between">
+                                    <h3 class="text-2xl font-bold text-white font-mono">Nfnixbot VPN Core</h3>
+                                    <span class="px-2.5 py-0.5 rounded text-[10px] font-mono font-medium bg-rose-500/10 text-rose-400 border border-rose-500/20">NOT FOR SALE</span>
+                                </div>
+                                <p class="text-slate-400 text-sm leading-relaxed">
+                                    Ультимативный VPN-сервис на базе Xray/VLESS-протоколов, защищенный от DPI. Разработан как собственная экосистема для друзей и личного пользования.
+                                </p>
+                                <ul class="text-xs text-slate-500 font-mono flex flex-col gap-1.5 mt-2">
+                                    <li><i class="fa-solid fa-caret-right text-cyan-400 mr-2"></i> Протокол: VLESS (Reality) / Shadowsocks 2022</li>
+                                    <li><i class="fa-solid fa-caret-right text-cyan-400 mr-2"></i> Авто-выдача ключей и автоматический биллинг</li>
+                                    <li><i class="fa-solid fa-caret-right text-cyan-400 mr-2"></i> Распределенная сеть из 10+ серверов в Европе</li>
+                                </ul>
+                            </div>
+
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-2 py-1 bg-slate-800/60 border border-slate-700/50 rounded text-[11px] font-mono text-slate-400">Python</span>
+                                <span class="px-2 py-1 bg-slate-800/60 border border-slate-700/50 rounded text-[11px] font-mono text-slate-400">VLESS/XTLS</span>
+                                <span class="px-2 py-1 bg-slate-800/60 border border-slate-700/50 rounded text-[11px] font-mono text-slate-400">Docker</span>
+                                <span class="px-2 py-1 bg-slate-800/60 border border-slate-700/50 rounded text-[11px] font-mono text-slate-400">PostgreSQL</span>
+                            </div>
+
+                            <div class="flex items-center gap-4 pt-4 border-t border-slate-800/60">
+                                <button onclick="openModal('nfnixModal')" class="interactive-hover flex-1 py-3 px-4 rounded-xl font-semibold bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 text-cyan-400 hover:border-cyan-400 transition-all font-mono text-xs text-center">
+                                    <i class="fa-solid fa-circle-info mr-2"></i>Спецификация
+                                </button>
+                                <a href="https://t.me/adaptlovenex" target="_blank" class="interactive-hover flex-1 py-3 px-4 rounded-xl font-semibold bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white transition-all font-mono text-xs text-center">
+                                    <i class="fa-solid fa-arrow-up-right-from-square mr-2"></i>Канал проекта
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Проект 2: OSINT Tool - @lovenexBot -->
+                    <div class="glass-panel overflow-hidden border-purple-500/20 hover:border-purple-500/40 hover:shadow-[0_0_30px_rgba(157,78,221,0.15)] transition-all flex flex-col justify-between group rounded-2xl">
+                        <!-- Шапка проекта с картинкой-паттерном -->
+                        <div class="relative h-48 bg-slate-900 border-b border-slate-800/60 overflow-hidden flex items-center justify-center">
+                            <!-- Сетевой декор -->
+                            <div class="absolute inset-0 bg-cover bg-center opacity-30 pointer-events-none" style="background-image: radial-gradient(circle, var(--cyber-purple) 1px, transparent 1px); background-size: 20px 20px;"></div>
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent"></div>
+                            <div class="relative z-10 text-center flex flex-col items-center">
+                                <i class="fa-solid fa-spider text-5xl text-purple-400 mb-2 group-hover:scale-110 transition-transform duration-300"></i>
+                                <span class="font-mono text-purple-400 font-bold tracking-widest text-lg">@lovenexBot OSINT</span>
+                            </div>
+                            <span class="absolute top-4 right-4 text-[10px] font-mono font-semibold px-2.5 py-1 rounded bg-purple-500/20 border border-purple-500/30 text-purple-300">PRODUCTION READY</span>
+                        </div>
+                        
+                        <!-- Описание проекта -->
+                        <div class="p-8 flex-1 flex flex-col justify-between gap-6">
+                            <div class="flex flex-col gap-3">
+                                <div class="flex items-center justify-between">
+                                    <h3 class="text-2xl font-bold text-white font-mono">lovenexBot Search Tool</h3>
+                                    <span class="px-2.5 py-0.5 rounded text-[10px] font-mono font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">AVAILABLE</span>
+                                </div>
+                                <p class="text-slate-400 text-sm leading-relaxed">
+                                    Многофункциональный асинхронный Telegram-бот для автоматизированного сбора открытых цифровых следов (OSINT), мониторинга утечек и агрегации публичных баз данных.
+                                </p>
+                                <ul class="text-xs text-slate-500 font-mono flex flex-col gap-1.5 mt-2">
+                                    <li><i class="fa-solid fa-caret-right text-purple-400 mr-2"></i> Поиск по: Telegram ID, телефону, Email, никнейму</li>
+                                    <li><i class="fa-solid fa-caret-right text-purple-400 mr-2"></i> Потоковый парсинг сотен терабайт слитых данных</li>
+                                    <li><i class="fa-solid fa-caret-right text-purple-400 mr-2"></i> Мощная система распределения лимитов</li>
+                                </ul>
+                            </div>
+
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-2 py-1 bg-slate-800/60 border border-slate-700/50 rounded text-[11px] font-mono text-slate-400">Aiogram</span>
+                                <span class="px-2 py-1 bg-slate-800/60 border border-slate-700/50 rounded text-[11px] font-mono text-slate-400">NoSQL/Redis</span>
+                                <span class="px-2 py-1 bg-slate-800/60 border border-slate-700/50 rounded text-[11px] font-mono text-slate-400">FastAPI</span>
+                                <span class="px-2 py-1 bg-slate-800/60 border border-slate-700/50 rounded text-[11px] font-mono text-slate-400">Parsing</span>
+                            </div>
+
+                            <div class="flex items-center gap-4 pt-4 border-t border-slate-800/60">
+                                <button onclick="openModal('osintModal')" class="interactive-hover flex-1 py-3 px-4 rounded-xl font-semibold bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/30 text-purple-400 hover:border-purple-400 transition-all font-mono text-xs text-center">
+                                    <i class="fa-solid fa-circle-info mr-2"></i>Спецификация
+                                </button>
+                                <a href="https://t.me/lovenexBot" target="_blank" class="interactive-hover flex-1 py-3 px-4 rounded-xl font-semibold bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white transition-all font-mono text-xs text-center">
+                                    <i class="fa-solid fa-arrow-up-right-from-square mr-2"></i>Запустить бота
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================================================
+           9. СЕКЦИЯ КОНТАКТОВ (SOCIALS ONLY)
+           ========================================================================== */ -->
+        <section id="contact" class="py-24 px-6 relative bg-gradient-to-t from-slate-950/40 to-transparent">
+            <div class="max-w-4xl mx-auto">
+                <!-- Заголовок -->
+                <div class="text-center flex flex-col items-center gap-4 mb-16">
+                    <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-white uppercase font-mono">
+                        <span class="text-cyan-400">~/</span>Связаться напрямую
+                    </h2>
+                    <p class="text-slate-400 max-w-xl text-center">
+                        Я всегда открыт для интересных предложений, аудитов приватности и сложных архитектурных вызовов в Telegram. Ниже представлены официальные ресурсы для связи.
+                    </p>
+                    <div class="w-24 h-1 bg-gradient-to-r from-cyan-400 to-purple-500 rounded-full mt-2"></div>
+                </div>
+
+                <!-- Блок Социальных ресурсов (Центрированный, Стильный) -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 items-stretch max-w-2xl mx-auto">
+                    <!-- Telegram Юзер -->
+                    <a href="https://t.me/lovenexu" target="_blank" class="interactive-hover flex flex-col items-center justify-center p-8 rounded-2xl glass-panel border-cyan-500/20 hover:border-cyan-500/40 hover:scale-[1.03] transition-all group text-center gap-4 shadow-lg">
+                        <div class="w-16 h-16 rounded-2xl bg-cyan-500/10 flex items-center justify-center text-cyan-400 text-3xl group-hover:scale-110 transition-transform">
+                            <i class="fa-brands fa-telegram"></i>
+                        </div>
+                        <div>
+                            <div class="text-slate-400 text-xs font-mono uppercase tracking-wider mb-1">Telegram Личка</div>
+                            <div class="text-white text-xl font-bold font-mono">@lovenexu</div>
+                        </div>
+                        <span class="text-[11px] font-mono px-3 py-1 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">Написать в DM</span>
+                    </a>
+
+                    <!-- Telegram Канал / Адаптер -->
+                    <a href="https://t.me/adaptlovenex" target="_blank" class="interactive-hover flex flex-col items-center justify-center p-8 rounded-2xl glass-panel border-purple-500/20 hover:border-purple-500/40 hover:scale-[1.03] transition-all group text-center gap-4 shadow-lg">
+                        <div class="w-16 h-16 rounded-2xl bg-purple-500/10 flex items-center justify-center text-purple-400 text-3xl group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-bullhorn"></i>
+                        </div>
+                        <div>
+                            <div class="text-slate-400 text-xs font-mono uppercase tracking-wider mb-1">Официальный Канал</div>
+                            <div class="text-white text-xl font-bold font-mono">@adaptlovenex</div>
+                        </div>
+                        <span class="text-[11px] font-mono px-3 py-1 rounded bg-purple-500/10 text-purple-400 border border-purple-500/20">Подписаться</span>
+                    </a>
+                </div>
+
+                <div class="text-center mt-12">
+                    <p class="text-xs font-mono text-slate-500 leading-relaxed">
+                        <span class="text-cyan-400 font-bold">[!]</span> Обратите внимание: у меня нет других аккаунтов. Всегда проверяйте никнейм перед началом обсуждения сделок.
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ==========================================================================
+       10. ПОДВАЛ САЙТА (FOOTER & SYS INFO MONITOR)
+       ========================================================================== */ -->
+    <footer class="border-t border-slate-900 bg-slate-950/80 backdrop-blur-md relative z-10 py-12 px-6">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
+            <div class="flex flex-col gap-2 text-center md:text-left">
+                <span class="font-mono text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500">&lt;lovenex /&gt;</span>
+                <p class="text-xs text-slate-500">© 2026. Разработчик lovenex. Все права защищены.</p>
+            </div>
+
+            <!-- Имитация мониторинга сервера -->
+            <div class="flex items-center gap-6 font-mono text-[11px] text-slate-500 border border-slate-800/80 px-4 py-2 rounded-xl bg-slate-900/30">
+                <div class="flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span>CPU: 1.4%</span>
+                </div>
+                <div class="flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+                    <span>RAM: 3.2 GB</span>
+                </div>
+                <div class="flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span>
+                    <span>Uptime: 247d</span>
+                </div>
+            </div>
+
+            <!-- Социальные Сети в Футере -->
+            <div class="flex items-center gap-4">
+                <a href="https://t.me/lovenexu" target="_blank" class="w-10 h-10 rounded-lg bg-slate-900 hover:bg-cyan-500/10 hover:text-cyan-400 border border-slate-850 flex items-center justify-center text-slate-400 transition-colors">
+                    <i class="fa-brands fa-telegram"></i>
+                </a>
+                <a href="https://t.me/adaptlovenex" target="_blank" class="w-10 h-10 rounded-lg bg-slate-900 hover:bg-purple-500/10 hover:text-purple-400 border border-slate-850 flex items-center justify-center text-slate-400 transition-colors">
+                    <i class="fa-solid fa-bullhorn"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ==========================================================================
+       11. МОДАЛЬНЫЕ ОКНА ДЛЯ СПЕЦИФИКАЦИЙ ПРОЕКТОВ (MODAL WINDOWS)
+       ========================================================================== */ -->
+    
+    <!-- Модалка 1: VPN Спецификация -->
+    <div id="nfnixModal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
+        <div class="relative w-full max-w-2xl glass-panel border-cyan-500/40 bg-slate-900 rounded-2xl overflow-hidden flex flex-col max-h-[90vh] shadow-[0_0_50px_rgba(0,242,254,0.3)] animate-fadeIn">
+            <!-- Скан-линия -->
+            <div class="scan-line"></div>
+            <!-- Хедер -->
+            <div class="p-6 border-b border-slate-800 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <i class="fa-solid fa-vault text-2xl text-cyan-400"></i>
+                    <h3 class="text-xl font-bold text-white font-mono">Nfnixbot VPN Specification</h3>
+                </div>
+                <button onclick="closeModal('nfnixModal')" class="text-slate-400 hover:text-white transition-colors">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+            <!-- Контент -->
+            <div class="p-6 overflow-y-auto flex flex-col gap-6 text-sm text-slate-300">
+                <div>
+                    <h4 class="font-mono text-cyan-400 font-bold mb-2">&gt; ИДЕОЛОГИЯ ПРОЕКТА:</h4>
+                    <p class="leading-relaxed">
+                        Nfnixbot — это полностью закрытая, масштабируемая архитектура VPN, разработанная на Python. Главный приоритет — обеспечение высокой скорости соединения и 100% незаметность VPN-трафика для систем фильтрации и DPI (ТСПУ в РФ). Сервис не предназначен для коммерческой продажи, является частным решением.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="p-4 rounded-xl bg-slate-950/50 border border-slate-800">
+                        <div class="text-[10px] font-mono text-cyan-400">ПРОТОКОЛЫ</div>
+                        <div class="text-white font-bold mt-1">VLESS (Reality), Trojan, ShadowSocks 2022</div>
+                    </div>
+                    <div class="p-4 rounded-xl bg-slate-950/50 border border-slate-800">
+                        <div class="text-[10px] font-mono text-cyan-400">БЭКЕНД СТЕК</div>
+                        <div class="text-white font-bold mt-1">Python 3.11, PostgreSQL, Redis, Docker</div>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="font-mono text-cyan-400 font-bold mb-2">&gt; КЛЮЧЕВЫЕ ТЕХНИЧЕСКИЕ РЕШЕНИЯ:</h4>
+                    <ul class="flex flex-col gap-3 font-mono text-xs">
+                        <li class="flex items-start gap-2">
+                            <span class="text-cyan-400">[✓]</span>
+                            <span><strong>Динамическая ротация IP:</strong> Реализована автоматическая перенастройка маршрутов при фиксации просадки скорости.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-cyan-400">[✓]</span>
+                            <span><strong>Reality обфускация:</strong> Трафик маскируется под TLS-сессии крупных разрешенных сайтов (Microsoft, Apple, Samsung).</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-cyan-400">[✓]</span>
+                            <span><strong>Telegram API Billing:</strong> Самописный асинхронный платежный шлюз с возможностью активации подарочных кодов.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- Футер модалки -->
+            <div class="p-4 border-t border-slate-800 bg-slate-950/40 flex justify-end">
+                <button onclick="closeModal('nfnixModal')" class="px-5 py-2 rounded-lg bg-slate-800 hover:bg-slate-750 text-white font-semibold transition-colors text-xs font-mono">
+                    Close Shell
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модалка 2: OSINT Бот Спецификация -->
+    <div id="osintModal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
+        <div class="relative w-full max-w-2xl glass-panel border-purple-500/40 bg-slate-900 rounded-2xl overflow-hidden flex flex-col max-h-[90vh] shadow-[0_0_50px_rgba(157,78,221,0.3)] animate-fadeIn">
+            <!-- Скан-линия -->
+            <div class="scan-line"></div>
+            <!-- Хедер -->
+            <div class="p-6 border-b border-slate-800 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <i class="fa-solid fa-spider text-2xl text-purple-400"></i>
+                    <h3 class="text-xl font-bold text-white font-mono">lovenexBot OSINT Specification</h3>
+                </div>
+                <button onclick="closeModal('osintModal')" class="text-slate-400 hover:text-white transition-colors">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+            <!-- Контент -->
+            <div class="p-6 overflow-y-auto flex flex-col gap-6 text-sm text-slate-300">
+                <div>
+                    <h4 class="font-mono text-purple-400 font-bold mb-2">&gt; СИСТЕМА ГЛУБОКОГО СБОРА:</h4>
+                    <p class="leading-relaxed">
+                        @lovenexBot — это многопоточный поисковый робот, предназначенный для аккумулирования информации из утекших баз данных и публичных реестров. Бот оптимизирован под экстремальные нагрузки и осуществляет поиск сотен гигабайт связей за доли секунд.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="p-4 rounded-xl bg-slate-950/50 border border-slate-800">
+                        <div class="text-[10px] font-mono text-purple-400">АРХИТЕКТУРА</div>
+                        <div class="text-white font-bold mt-1">Async Cluster, Fast Queue, Sharding</div>
+                    </div>
+                    <div class="p-4 rounded-xl bg-slate-950/50 border border-slate-800">
+                        <div class="text-[10px] font-mono text-purple-400">СКОРОСТЬ ЗАПРОСА</div>
+                        <div class="text-white font-bold mt-1">&lt; 150ms по базе в 500M+ записей</div>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="font-mono text-purple-400 font-bold mb-2">&gt; ФУНКЦИОНАЛЬНОСТЬ КЛАСТЕРА:</h4>
+                    <ul class="flex flex-col gap-3 font-mono text-xs">
+                        <li class="flex items-start gap-2">
+                            <span class="text-purple-400">[✓]</span>
+                            <span><strong>Агрегатор баз:</strong> Оптимизированное хранение терабайт логов с индексированием по ключевым зацепкам (Phone, ID, Email).</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-purple-400">[✓]</span>
+                            <span><strong>Поиск совпадений:</strong> Прогрессивные алгоритмы выявления альтернативных никнеймов у одного и того же субъекта.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-purple-400">[✓]</span>
+                            <span><strong>API Шлюзы:</strong> Возможность удаленного подключения к поисковой ноде через защищенный REST API.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- Футер модалки -->
+            <div class="p-4 border-t border-slate-800 bg-slate-950/40 flex justify-end">
+                <button onclick="closeModal('osintModal')" class="px-5 py-2 rounded-lg bg-slate-800 hover:bg-slate-750 text-white font-semibold transition-colors text-xs font-mono">
+                    Close Shell
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+       12. СКРИПТЫ И ДИНАМИКА САЙТА (VANILLA JAVASCRIPT / ES6+)
+       ========================================================================== */ -->
+    <script>
+        // Ждем полной загрузки DOM-дерева
+        document.addEventListener('DOMContentLoaded', () => {
+
+            /* ==========================================
+               12.1. КАНВАС ЧАСТИЦ (HIGH TECH PARTICLES)
+               ========================================== */
+            const canvas = document.getElementById('particleCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            let particlesArray = [];
+            const numberOfParticles = 75;
+
+            // Изменение размеров холста
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+
+            // Объект мыши для отталкивания
+            const mouse = {
+                x: null,
+                y: null,
+                radius: 120
+            };
+
+            window.addEventListener('mousemove', (event) => {
+                mouse.x = event.x;
+                mouse.y = event.y;
+            });
+
+            window.addEventListener('mouseout', () => {
+                mouse.x = null;
+                mouse.y = null;
+            });
+
+            // Класс Частицы
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.size = Math.random() * 2 + 1;
+                    this.baseX = this.x;
+                    this.baseY = this.y;
+                    this.density = (Math.random() * 30) + 15;
+                    this.color = Math.random() > 0.5 ? '#00f2fe' : '#9d4edd';
+                    this.velocity = {
+                        x: (Math.random() - 0.5) * 0.5,
+                        y: (Math.random() - 0.5) * 0.5
+                    };
+                }
+
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fillStyle = this.color;
+                    ctx.fill();
+                }
+
+                update() {
+                    // Обычное медленное парение
+                    this.x += this.velocity.x;
+                    this.y += this.velocity.y;
+
+                    // Возвращение в границы
+                    if (this.x < 0 || this.x > canvas.width) this.velocity.x = -this.velocity.x;
+                    if (this.y < 0 || this.y > canvas.height) this.velocity.y = -this.velocity.y;
+
+                    // Отталкивание от курсора мыши
+                    if (mouse.x != null && mouse.y != null) {
+                        let dx = mouse.x - this.x;
+                        let dy = mouse.y - this.y;
+                        let distance = Math.sqrt(dx * dx + dy * dy);
+                        
+                        if (distance < mouse.radius) {
+                            const forceDirectionX = dx / distance;
+                            const forceDirectionY = dy / distance;
+                            const maxDistance = mouse.radius;
+                            const force = (maxDistance - distance) / maxDistance;
+                            const directionX = forceDirectionX * force * this.density * 0.6;
+                            const directionY = forceDirectionY * force * this.density * 0.6;
+
+                            this.x -= directionX;
+                            this.y -= directionY;
+                        }
+                    }
+                    this.draw();
+                }
+            }
+
+            // Инициализация массива частиц
+            function initParticles() {
+                particlesArray = [];
+                for (let i = 0; i < numberOfParticles; i++) {
+                    particlesArray.push(new Particle());
+                }
+            }
+            initParticles();
+
+            // Анимационный цикл
+            function animateParticles() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                for (let i = 0; i < particlesArray.length; i++) {
+                    particlesArray[i].update();
+                }
+                connectParticles();
+                requestAnimationFrame(animateParticles);
+            }
+            animateParticles();
+
+            // Соединительные линии между близкими частицами
+            function connectParticles() {
+                let opacityValue = 1;
+                for (let a = 0; a < particlesArray.length; a++) {
+                    for (let b = a; b < particlesArray.length; b++) {
+                        let dx = particlesArray[a].x - particlesArray[b].x;
+                        let dy = particlesArray[a].y - particlesArray[b].y;
+                        let distance = Math.sqrt(dx * dx + dy * dy);
+
+                        if (distance < 110) {
+                            opacityValue = 1 - (distance/110);
+                            ctx.strokeStyle = `rgba(0, 242, 254, ${opacityValue * 0.12})`;
+                            ctx.lineWidth = 1;
+                            ctx.beginPath();
+                            ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+                            ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+            }
+
+            /* ==========================================
+               12.2. КАСТОМНЫЙ КУРСОР И ПОЗИЦИОНИРОВАНИЕ
+               ========================================== */
+            const cursor = document.getElementById('customCursor');
+            const cursorDot = document.getElementById('customCursorDot');
+            
+            document.addEventListener('mousemove', (e) => {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+                cursorDot.style.left = e.clientX + 'px';
+                cursorDot.style.top = e.clientY + 'px';
+            });
+
+            // Добавляем класс ко всем ссылкам и кнопкам для изменения курсора на ховер
+            const interactives = document.querySelectorAll('a, button, select, input, textarea');
+            interactives.forEach(el => {
+                el.classList.add('interactive-hover');
+            });
+
+
+            /* ==========================================
+               12.3. ЭФФЕКТ ПЕЧАТАЮЩЕГОСЯ ТЕКСТА (TYPING EFFECT)
+               ========================================== */
+            const words = ["Защищаю личные данные", "Разрабатываю быстрых ботов", "Решаю задачи OSINT", "Строю приватные VPN"];
+            let i = 0;
+            let timer;
+
+            function typingEffect() {
+                let word = words[i].split("");
+                var loopTyping = function() {
+                    if (word.length > 0) {
+                        document.getElementById('typedElement').innerHTML += word.shift();
+                    } else {
+                        setTimeout(deletingEffect, 2500);
+                        return false;
+                    }
+                    timer = setTimeout(loopTyping, 70);
+                };
+                loopTyping();
+            }
+
+            function deletingEffect() {
+                let word = words[i].split("");
+                var loopDeleting = function() {
+                    if (word.length > 0) {
+                        word.pop();
+                        document.getElementById('typedElement').innerHTML = word.join("");
+                    } else {
+                        if (words.length > (i + 1)) {
+                            i++;
+                        } else {
+                            i = 0;
+                        }
+                        setTimeout(typingEffect, 500);
+                        return false;
+                    }
+                    timer = setTimeout(loopDeleting, 30);
+                };
+                loopDeleting();
+            }
+
+            typingEffect();
+
+
+            /* ==========================================
+               12.4. МОБИЛЬНОЕ МЕНЮ И НАВИГАЦИЯ
+               ========================================== */
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+                mobileMenu.classList.toggle('flex');
+            });
+
+            // Закрывать меню при клике по ссылкам
+            document.querySelectorAll('.mobile-nav-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                    mobileMenu.classList.remove('flex');
+                });
+            });
+
+
+            /* ==========================================
+               12.5. SCROLL SPY (ПОДСВЕТКА НАВИГАЦИИ)
+               ========================================== */
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    if (pageYOffset >= (sectionTop - 200)) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').slice(1) === current) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+
+        });
+
+        /* ==========================================
+           12.6. УПРАВЛЕНИЕ МОДАЛЬНЫМИ ОКНАМИ (MODALS)
+           ========================================== */
+        function openModal(id) {
+            const modal = document.getElementById(id);
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden'; // Отключаем прокрутку страницы
+        }
+
+        function closeModal(id) {
+            const modal = document.getElementById(id);
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.body.style.overflow = ''; // Возвращаем прокрутку страницы
+        }
+    </script>
+</body>
+</html>
+
+
